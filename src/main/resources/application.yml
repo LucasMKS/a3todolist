@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: todo
+  datasource:
+    url: jdbc:postgres:sTcnwTlQcJMELANtyaBVYUWONyZOXRhp@switchyard.proxy.rlwy.net:56533/railway
+    username: postgres
+    password: sTcnwTlQcJMELANtyaBVYUWONyZOXRhp
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+ 
+server:
+  port: 8080
