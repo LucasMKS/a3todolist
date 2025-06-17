@@ -1,5 +1,5 @@
-// src/main/java/com/a3/todo/TaskController.java
-package com.a3.todo;
+// src/main/java/com/a3/todo/controller/TaskController.java
+package com.a3.todo.controller; // <- Pacote corrigido
 
 import com.a3.todo.dto.TaskRequestDTO;
 import com.a3.todo.dto.TaskResponseDTO;
@@ -46,10 +46,9 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         try {
             taskService.deleteTask(id);
-            return ResponseEntity.noContent().build(); // Retorna 204 No Content
+            return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 }
-

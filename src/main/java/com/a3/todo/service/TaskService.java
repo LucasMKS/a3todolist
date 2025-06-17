@@ -1,10 +1,10 @@
 // src/main/java/com/a3/todo/service/TaskService.java
-package com.a3.todo.service;
+package com.a3.todo.service; // <- Pacote corrigido
 
-import com.a3.todo.Task;
-import com.a3.todo.TaskRepository;
 import com.a3.todo.dto.TaskRequestDTO;
 import com.a3.todo.dto.TaskResponseDTO;
+import com.a3.todo.entity.Task;
+import com.a3.todo.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service // Marca esta classe como um componente de Serviço do Spring
+@Service
 public class TaskService {
 
     @Autowired
@@ -21,14 +21,14 @@ public class TaskService {
     public List<TaskResponseDTO> getAllTasks() {
         return taskRepository.findAll()
                 .stream()
-                .map(TaskResponseDTO::new) // Converte cada Task em um TaskResponseDTO
+                .map(TaskResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
     public TaskResponseDTO createTask(TaskRequestDTO requestDTO) {
         Task newTask = new Task();
         newTask.setTitle(requestDTO.title());
-        newTask.setCompleted(false); // Novas tarefas sempre começam como não concluídas
+        newTask.setCompleted(false);
 
         Task savedTask = taskRepository.save(newTask);
         return new TaskResponseDTO(savedTask);
