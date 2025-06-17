@@ -2,7 +2,7 @@ spring:
   application:
     name: todo
   datasource:
-    url: jdbc:postgres:sTcnwTlQcJMELANtyaBVYUWONyZOXRhp@switchyard.proxy.rlwy.net:56533/railway
+    url: jdbc:postgresql://switchyard.proxy.rlwy.net:56533/railway
     username: postgres
     password: sTcnwTlQcJMELANtyaBVYUWONyZOXRhp
     driver-class-name: org.postgresql.Driver
@@ -10,6 +10,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
  
 server:
   port: 8080
