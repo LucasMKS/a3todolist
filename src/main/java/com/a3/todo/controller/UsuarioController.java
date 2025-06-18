@@ -5,7 +5,6 @@ import com.a3.todo.dto.UsuarioResponseDTO;
 import com.a3.todo.entity.Usuario;
 import com.a3.todo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
