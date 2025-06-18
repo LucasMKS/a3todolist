@@ -14,7 +14,7 @@ public class Grupo {
 
     private String nome;
 
-    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Usuario> usuarios;
 
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)

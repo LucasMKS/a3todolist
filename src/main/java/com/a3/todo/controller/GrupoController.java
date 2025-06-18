@@ -1,11 +1,13 @@
 package com.a3.todo.controller;
 
+import com.a3.todo.dto.GrupoResponseDTO;
 import com.a3.todo.entity.Grupo;
 import com.a3.todo.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/grupos")
@@ -15,19 +17,24 @@ public class GrupoController {
     private GrupoService grupoService;
 
     @PostMapping
-    public Grupo criarGrupo(@RequestBody Grupo grupo) {
-        return grupoService.criarGrupo(grupo);
+    public GrupoResponseDTO criarGrupo(@RequestBody Map<String, String> request) {
+        String nome = request.get("nome");
+        Grupo grupo = grupoService.criarGrupo(nome);
+        return grupoService.toDTO(grupo);
     }
 
     @GetMapping
-    public List<Grupo> listarGrupos() {
-        return grupoService.listarGrupos();
+    public List<GrupoResponseDTO> listarGrupos() {
+        return grupoService.listarGrupos().stream()
+                .map(grupoService::toDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Grupo buscarPorId(@PathVariable Long id) {
-        return grupoService.buscarPorId(id)
+    public GrupoResponseDTO buscarPorId(@PathVariable Long id) {
+        Grupo grupo = grupoService.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Grupo não encontrado"));
+        return grupoService.toDTO(grupo);
     }
 
     @DeleteMapping("/{id}")
