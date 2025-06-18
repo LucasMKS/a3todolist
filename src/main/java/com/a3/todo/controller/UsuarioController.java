@@ -1,27 +1,37 @@
 package com.a3.todo.controller;
 
+import com.a3.todo.dto.AdicionarUsuarioGrupoRequest;
+import com.a3.todo.dto.UsuarioResponseDTO;
 import com.a3.todo.entity.Usuario;
 import com.a3.todo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
     @PostMapping("/grupo/{grupoId}")
-    public Usuario adicionarUsuario(@PathVariable Long grupoId, @RequestBody Usuario usuario) {
-        return usuarioService.adicionarUsuario(grupoId, usuario);
+    public UsuarioResponseDTO adicionarUsuarioAoGrupo(@PathVariable Long grupoId,
+                                                @RequestBody AdicionarUsuarioGrupoRequest request) {
+        Usuario usuario = usuarioService.adicionarUsuario(grupoId, request.getEmail(), request.getFuncao());
+        return usuarioService.toDTO(usuario);
     }
 
     @GetMapping("/grupo/{grupoId}")
-    public List<Usuario> listarUsuariosPorGrupo(@PathVariable Long grupoId) {
-        return usuarioService.listarUsuariosPorGrupo(grupoId);
+    public List<UsuarioResponseDTO> listarUsuariosPorGrupo(@PathVariable Long grupoId) {
+        return usuarioService.listarUsuariosPorGrupo(grupoId)
+                .stream()
+                .map(usuarioService::toDTO)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{usuarioId}")
@@ -30,7 +40,9 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{usuarioId}/funcao")
-    public Usuario atualizarFuncao(@PathVariable Long usuarioId, @RequestParam String funcao) {
-        return usuarioService.atualizarFuncao(usuarioId, funcao);
+    public UsuarioResponseDTO atualizarFuncao(@PathVariable Long usuarioId, @RequestParam String funcao) {
+        Usuario usuario = usuarioService.atualizarFuncao(usuarioId, funcao);
+        return usuarioService.toDTO(usuario);
     }
+
 }

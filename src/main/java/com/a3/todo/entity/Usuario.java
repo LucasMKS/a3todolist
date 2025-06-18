@@ -15,7 +15,10 @@ public class Usuario {
     private String email;
     private String funcao;
 
-    @ManyToOne
+    private String senha;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "grupo_id")
     private Grupo grupo;
+
 }
