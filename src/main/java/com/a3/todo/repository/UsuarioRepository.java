@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    List<Usuario> findByGrupoId(Long grupoId);
     Optional<Usuario> findByEmail(String email);
 }

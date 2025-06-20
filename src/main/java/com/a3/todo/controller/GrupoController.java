@@ -25,7 +25,7 @@ public class GrupoController {
 
     @GetMapping
     public List<GrupoResponseDTO> listarGrupos() {
-        return grupoService.listarGrupos().stream()
+        return grupoService.listarGruposDoUsuario().stream()
                 .map(grupoService::toDTO)
                 .toList();
     }

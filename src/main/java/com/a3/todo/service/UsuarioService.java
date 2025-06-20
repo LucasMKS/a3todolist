@@ -29,30 +29,32 @@ public class UsuarioService {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
 
-        // Usuário autenticado
         String emailAutenticado = getEmailUsuarioAutenticado();
-
         Usuario usuarioAutenticado = usuarioRepository.findByEmail(emailAutenticado)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário autenticado não encontrado"));
 
-        // Valida se o usuário autenticado faz parte do grupo
-        if (usuarioAutenticado.getGrupo() == null || !usuarioAutenticado.getGrupo().getId().equals(grupoId)) {
+        // Verifica se o usuário autenticado é membro do grupo
+        if (usuarioAutenticado.getGrupos().stream().noneMatch(g -> g.getId().equals(grupoId))) {
             throw new RuntimeException("Você não tem permissão para adicionar usuários neste grupo.");
         }
 
-        // Busca o usuário que será adicionado
+        // Usuário a ser adicionado
         Usuario usuarioParaAdicionar = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com este e-mail não encontrado."));
 
-        // Associa ao grupo
-        usuarioParaAdicionar.setGrupo(grupo);
-        usuarioParaAdicionar.setFuncao(funcao);
+        // Adiciona o grupo à lista de grupos dele, se ainda não estiver
+        if (usuarioParaAdicionar.getGrupos().stream().noneMatch(g -> g.getId().equals(grupoId))) {
+            usuarioParaAdicionar.getGrupos().add(grupo);
+        }
 
+        usuarioParaAdicionar.setFuncao(funcao);
         return usuarioRepository.save(usuarioParaAdicionar);
     }
 
     public List<Usuario> listarUsuariosPorGrupo(Long grupoId) {
-        return usuarioRepository.findByGrupoId(grupoId);
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
+        return grupo.getUsuarios(); // utiliza o relacionamento do Grupo
     }
 
     public void removerUsuario(Long usuarioId) {
@@ -73,7 +75,7 @@ public class UsuarioService {
     private String getEmailUsuarioAutenticado() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-    
+
     public UsuarioResponseDTO toDTO(Usuario usuario) {
         UsuarioResponseDTO dto = new UsuarioResponseDTO();
         dto.setId(usuario.getId());
@@ -81,13 +83,13 @@ public class UsuarioService {
         dto.setEmail(usuario.getEmail());
         dto.setFuncao(usuario.getFuncao());
 
-        if (usuario.getGrupo() != null) {
-            dto.setGrupoId(usuario.getGrupo().getId());
-            dto.setGrupoNome(usuario.getGrupo().getNome());
+        // Se quiser apenas um grupo (como antes), pegue o primeiro:
+        if (usuario.getGrupos() != null && !usuario.getGrupos().isEmpty()) {
+            Grupo grupo = usuario.getGrupos().get(0);
+            dto.setGrupoId(grupo.getId());
+            dto.setGrupoNome(grupo.getNome());
         }
 
         return dto;
     }
-
-
 }

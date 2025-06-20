@@ -1,5 +1,7 @@
 package com.a3.todo.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,8 +19,12 @@ public class Usuario {
 
     private String senha;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "grupo_id")
-    private Grupo grupo;
+    @ManyToMany
+    @JoinTable(
+        name = "usuario_grupo",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "grupo_id")
+    )
+    private List<Grupo> grupos;
 
 }
