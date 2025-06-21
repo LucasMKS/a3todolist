@@ -2,9 +2,9 @@ spring:
   application:
     name: todo
   datasource:
-    url: jdbc:postgresql://switchyard.proxy.rlwy.net:56533/railway
-    username: postgres
-    password: sTcnwTlQcJMELANtyaBVYUWONyZOXRhp
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
